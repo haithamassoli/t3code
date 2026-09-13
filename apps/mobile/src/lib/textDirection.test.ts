@@ -12,6 +12,9 @@ describe("resolveTextDirection", () => {
   it("resolves Hebrew and Arabic text as right-to-left", () => {
     expect(resolveTextDirection("הודעה בעברית")).toBe("rtl");
     expect(resolveTextDirection("رسالة بالعربية")).toBe("rtl");
+    expect(resolveTextDirection("React Server Components האם להשתמש בהם בפרויקט החדש שלנו?")).toBe(
+      "rtl",
+    );
   });
 
   it("resolves English and other left-to-right scripts as left-to-right", () => {

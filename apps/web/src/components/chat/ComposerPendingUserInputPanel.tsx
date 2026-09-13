@@ -1,4 +1,5 @@
 import { type ApprovalRequestId } from "@t3tools/contracts";
+import { resolveTextDirection } from "@t3tools/shared/textDirection";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { type PendingUserInput } from "../../session-logic";
 import {
@@ -187,11 +188,17 @@ const ComposerPendingUserInputCard = memo(function ComposerPendingUserInputCard(
       >
         <ComposerBanner.Icon />
         <ComposerBanner.Content>
-          <span dir="auto" className="shrink-0 font-medium text-muted-foreground">
+          <span
+            dir={resolveTextDirection(activeQuestion.header)}
+            className="shrink-0 font-medium text-muted-foreground"
+          >
             {activeQuestion.header}
           </span>
           {isCollapsed ? (
-            <span dir="auto" className="min-w-0 flex-1 truncate text-secondary-label">
+            <span
+              dir={resolveTextDirection(activeQuestion.question)}
+              className="min-w-0 flex-1 truncate text-secondary-label"
+            >
               {activeQuestion.question}
             </span>
           ) : null}
@@ -229,7 +236,10 @@ const ComposerPendingUserInputCard = memo(function ComposerPendingUserInputCard(
       </CollapsibleTrigger>
       <CollapsiblePanel>
         <ComposerBanner.Body className="pe-1 pb-1">
-          <p dir="auto" className="text-sm text-foreground/85">
+          <p
+            dir={resolveTextDirection(activeQuestion.question)}
+            className="text-sm text-foreground/85"
+          >
             {activeQuestion.question}
           </p>
           {activeQuestion.multiSelect ? (
@@ -256,11 +266,14 @@ const ComposerPendingUserInputCard = memo(function ComposerPendingUserInputCard(
               const content = (
                 <>
                   <div className="min-w-0 flex-1 flex flex-col gap-0.5">
-                    <span dir="auto" className="text-sm font-medium">
+                    <span dir={resolveTextDirection(option.label)} className="text-sm font-medium">
                       {option.label}
                     </span>
                     {option.description && option.description !== option.label ? (
-                      <span dir="auto" className="text-secondary-label text-[11px]">
+                      <span
+                        dir={resolveTextDirection(option.description)}
+                        className="text-secondary-label text-[11px]"
+                      >
                         {option.description}
                       </span>
                     ) : null}

@@ -82,7 +82,7 @@ describe("ComposerPendingUserInputPanel", () => {
         {
           ...prompt.questions[0]!,
           header: "בחירת גישה",
-          question: "האם להשתמש ב-React Server Components עבור ה-dashboard?",
+          question: "React Server Components האם להשתמש בהם בפרויקט החדש שלנו?",
           options: [
             { label: "כן, להשתמש ב-RSC", description: "מתאים ל-Next.js App Router" },
             { label: "Client Components", description: "להשאיר את הממשק בצד הלקוח" },
@@ -106,16 +106,19 @@ describe("ComposerPendingUserInputPanel", () => {
         );
       });
 
-      const directedText = renderer!.root.findAllByProps({ dir: "auto" });
-      for (const text of [
-        "בחירת גישה",
-        "האם להשתמש ב-React Server Components עבור ה-dashboard?",
-        "כן, להשתמש ב-RSC",
-        "מתאים ל-Next.js App Router",
-        "Client Components",
-        "להשאיר את הממשק בצד הלקוח",
-      ]) {
-        expect(directedText.some((node) => node.children.includes(text))).toBe(true);
+      for (const [text, direction] of [
+        ["בחירת גישה", "rtl"],
+        ["React Server Components האם להשתמש בהם בפרויקט החדש שלנו?", "rtl"],
+        ["כן, להשתמש ב-RSC", "rtl"],
+        ["מתאים ל-Next.js App Router", "rtl"],
+        ["Client Components", "ltr"],
+        ["להשאיר את הממשק בצד הלקוח", "rtl"],
+      ] as const) {
+        expect(
+          renderer!.root.find(
+            (node) => node.props.dir === direction && node.children.includes(text),
+          ),
+        ).toBeDefined();
       }
       expect(
         renderer!.root.findAll(
@@ -134,9 +137,9 @@ describe("ComposerPendingUserInputPanel", () => {
       expect(
         renderer!.root.find(
           (node) =>
-            node.props.dir === "auto" &&
+            node.props.dir === "rtl" &&
             String(node.props.className).includes("truncate") &&
-            node.children.includes("האם להשתמש ב-React Server Components עבור ה-dashboard?"),
+            node.children.includes("React Server Components האם להשתמש בהם בפרויקט החדש שלנו?"),
         ),
       ).toBeDefined();
     } finally {

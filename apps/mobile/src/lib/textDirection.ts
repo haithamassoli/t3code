@@ -1,32 +1,41 @@
+import { resolveTextDirection, type TextDirection } from "@t3tools/shared/textDirection";
 import type { MarkdownNode } from "react-native-nitro-markdown";
 
-export type TextDirection = "ltr" | "rtl";
-
-const LETTER_CHARACTER = /^\p{Letter}$/u;
-const RTL_SCRIPT_CHARACTER =
-  /^[\u0590-\u08ff\ufb1d-\ufdff\ufe70-\ufeff\u{10800}-\u{10fff}\u{1e800}-\u{1eeff}]$/u;
 const GITHUB_ALERT_MARKER = /\[!(?:NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/giu;
+const MAX_MARKDOWN_PROSE_CODE_UNITS = 17_408;
 
-function markdownProse(node: MarkdownNode): string {
+function collectMarkdownProse(
+  node: MarkdownNode,
+  chunks: string[],
+  remainingCodeUnits: number,
+): number {
+  if (remainingCodeUnits === 0) return 0;
   if (node.type === "code_inline" || node.type === "code_block" || node.type === "image") {
-    return "";
+    return remainingCodeUnits;
   }
 
   if (node.type === "text") {
-    return (node.content ?? "").replace(GITHUB_ALERT_MARKER, "");
+    const text = (node.content ?? "").slice(0, remainingCodeUnits).replace(GITHUB_ALERT_MARKER, "");
+    chunks.push(text);
+    return remainingCodeUnits - text.length;
   }
 
-  return node.children?.map(markdownProse).join("") ?? "";
+  for (const child of node.children ?? []) {
+    remainingCodeUnits = collectMarkdownProse(child, chunks, remainingCodeUnits);
+    if (remainingCodeUnits === 0) break;
+  }
+  return remainingCodeUnits;
 }
 
-export function resolveTextDirection(text: string): TextDirection {
-  for (const character of text) {
-    if (!LETTER_CHARACTER.test(character)) continue;
-    return RTL_SCRIPT_CHARACTER.test(character) ? "rtl" : "ltr";
-  }
-  return "ltr";
+function markdownProse(node: MarkdownNode): string {
+  const chunks: string[] = [];
+  collectMarkdownProse(node, chunks, MAX_MARKDOWN_PROSE_CODE_UNITS);
+  return chunks.join("");
 }
 
 export function resolveMarkdownNodeTextDirection(node: MarkdownNode): TextDirection {
   return resolveTextDirection(markdownProse(node));
 }
+
+export { resolveTextDirection };
+export type { TextDirection };
