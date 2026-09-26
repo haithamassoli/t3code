@@ -205,7 +205,7 @@ const ComposerPendingUserInputCard = memo(function ComposerPendingUserInputCard(
         </ComposerBanner.Content>
         <ComposerBanner.Actions>
           {prompt.questions.length > 1 ? (
-            <span className="text-[10px] font-medium text-muted-foreground tabular-nums">
+            <span className="text-3xs font-medium text-muted-foreground tabular-nums">
               {questionIndex + 1}/{prompt.questions.length}
             </span>
           ) : null}
@@ -276,7 +276,7 @@ const ComposerPendingUserInputCard = memo(function ComposerPendingUserInputCard(
                       {option.description && option.description !== option.label ? (
                         <span
                           dir={resolveTextDirection(option.description)}
-                          className="text-secondary-label text-[11px]"
+                          className="text-secondary-label text-2xs"
                         >
                           {option.description}
                         </span>
@@ -287,7 +287,7 @@ const ComposerPendingUserInputCard = memo(function ComposerPendingUserInputCard(
                     ) : shortcutKey !== null ? (
                       <kbd
                         className={cn(
-                          "flex size-5 shrink-0 items-center justify-center text-[10px] font-medium text-muted-foreground tabular-nums",
+                          "flex size-5 shrink-0 items-center justify-center text-3xs font-medium text-muted-foreground tabular-nums",
                         )}
                       >
                         {shortcutKey}
