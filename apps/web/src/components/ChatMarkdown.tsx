@@ -967,16 +967,15 @@ function MarkdownDetails({
         data-markdown-details-open={isOpen ? "true" : "false"}
       >
         <CollapsibleTrigger
-          className="flex w-full items-center gap-2 py-2 text-left text-sm font-medium text-foreground data-panel-open:[&_svg]:rotate-90"
+          dir={summaryDirection}
+          className="flex w-full items-center gap-2 py-2 text-start text-sm font-medium text-foreground data-panel-open:[&_svg]:rotate-90"
           data-markdown-details-summary=""
         >
           <ChevronRightIcon
             className="size-4 shrink-0 text-muted-foreground transition-transform"
             aria-hidden
           />
-          <span dir={summaryDirection ?? "auto"} className="min-w-0 flex-1 text-start">
-            {summary}
-          </span>
+          <span className="min-w-0 flex-1 text-start">{summary}</span>
         </CollapsibleTrigger>
         <CollapsiblePanel>
           <div
@@ -3369,7 +3368,7 @@ const CHAT_MARKDOWN_COMPONENTS = {
       }
     }
     return (
-      <code {...props} dir="ltr" className={className}>
+      <code {...props} dir={props.dir ?? "ltr"} className={className}>
         {children}
       </code>
     );
