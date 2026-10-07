@@ -2245,7 +2245,7 @@ code {
 }
 
 .composer-tiptap ul[data-type="taskList"] ul[data-type="taskList"] {
-  padding-left: 1.375rem;
+  padding-inline-start: 1.375rem;
 }
 
 .composer-tiptap li[data-checked] {
