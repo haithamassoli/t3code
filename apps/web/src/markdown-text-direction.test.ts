@@ -63,6 +63,42 @@ describe("Markdown text direction", () => {
     expect(laterParagraph.properties).toEqual({ dir: "auto" });
   });
 
+  it.each(["blockquote", "li", "details"])(
+    "keeps a %s's scan open through images, neutral text, and isolated code",
+    (tagName) => {
+      const image = { ...element("img"), properties: { alt: "English image label" } };
+      const imageParagraph = { ...element("p"), children: [image] };
+      const neutralParagraph = element("p", [text("123 … 😀")]);
+      const code = element("code", [text("npm run build")]);
+      const codeParagraph = { ...element("p"), children: [code] };
+      const authored = element("span", [text("English override")], "ltr");
+      const authoredParagraph = { ...element("p"), children: [authored] };
+      const arabic = element("p", [text("مرحبا بالعالم!")]);
+      const english = element("p", [text("English next")]);
+      const paragraphs = [
+        imageParagraph,
+        neutralParagraph,
+        codeParagraph,
+        authoredParagraph,
+        arabic,
+        english,
+      ];
+      const container = { ...element(tagName), children: paragraphs };
+      rehypeTextDirection()({ type: "root", children: [container] });
+      expect(container.properties).toEqual({ dir: "auto" });
+      expect(paragraphs.map((paragraph) => paragraph.properties)).toEqual([
+        {},
+        {},
+        {},
+        {},
+        {},
+        { dir: "auto" },
+      ]);
+      expect(code.properties).toEqual({ dir: "ltr" });
+      expect(authored.properties).toEqual({ dir: "ltr" });
+    },
+  );
+
   it("lets paragraphs after a heading inside a quote resolve independently", () => {
     const heading = element("h2", [text("English heading")]);
     const paragraph = element("p", [text("مرحبا!")]);

@@ -1,5 +1,6 @@
 interface HtmlNode {
   type: string;
+  value?: string;
   tagName?: string;
   properties?: Record<string, unknown>;
   children?: HtmlNode[];
@@ -31,8 +32,16 @@ export function rehypeTextDirection() {
             node.properties.dir = "auto";
             prose = { hasTextBlock: false };
           }
-          if (textBlock) prose.hasTextBlock = true;
         }
+      }
+      // Images, neutral text, and isolated code cannot establish prose direction.
+      // ponytail: letters and direction marks end the scan; use bidi data if symbol-only blocks need to.
+      if (
+        node.type === "text" &&
+        prose &&
+        /[\p{L}\p{Nl}\u061c\u200e\u200f]/u.test(node.value ?? "")
+      ) {
+        prose.hasTextBlock = true;
       }
       node.children?.forEach((child) => visit(child, prose));
     };
