@@ -69,6 +69,20 @@ export const ComposerTaskItemExtension = TaskItem.extend({
       contentSpace: { default: null },
     };
   },
+  // `dir="auto"` on the <li> flips the checkbox row for RTL tasks. The label's
+  // own `dir` keeps its hidden English a11y text out of that detection.
+  addNodeView() {
+    const renderNodeView = this.parent?.();
+    if (!renderNodeView) return null;
+    return (props) => {
+      const view = renderNodeView(props);
+      if (view.dom instanceof HTMLElement) {
+        view.dom.dir = "auto";
+        view.dom.firstElementChild?.setAttribute("dir", "auto");
+      }
+      return view;
+    };
+  },
 }).configure({ nested: true });
 
 function randomNodeKey(): string {
