@@ -200,12 +200,12 @@ export function NativeMarkdownSelectableText(props: {
   readonly onLinkPress?: (href: string) => void;
 }) {
   const textTag = useRef<number | null>(null);
+  // RN can replace attributed text on any prop update, even without a new layout event.
   useEffect(() => {
     if (Platform.OS === "android" && textTag.current !== null) {
       setNaturalTextAlignment(textTag.current);
     }
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies -- RN replaces the attributed text even when its layout is unchanged.
-  }, [props.runs]);
+  });
   const colorScheme = useColorScheme();
   const menu = useContext(MarkdownFileContextMenuContext);
   const contextClipboardFragment = useContext(MarkdownContextClipboardContext);

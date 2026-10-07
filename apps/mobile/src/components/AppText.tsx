@@ -33,12 +33,12 @@ export function AppText({ className, naturalDirection, onLayout, ...props }: App
         : undefined,
     [naturalDirection, props.children],
   );
+  // RN can replace native text on any prop update, even without a new layout event.
   useEffect(() => {
     if (naturalDirection && Platform.OS === "android" && textTag.current !== null) {
       setNaturalTextAlignment(textTag.current);
     }
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies -- RN replaces native text even when its layout is unchanged.
-  }, [naturalDirection, props.children]);
+  });
   return (
     <RNText
       className={cn("font-sans text-foreground", className)}
